@@ -1,0 +1,159 @@
+\documentclass{article}
+
+\usepackage[
+	eientei,
+	+maths,
+	+tikz,
+	categoryStyle = script,
+	scriptStyle = rsfs
+]{kappak}
+\usepackage{paralist}
+\usepackage{stmaryrd}
+
+\title{Homotopy Theory of Strict $\omega$-Categories}
+\author{Unofficial notes from the lectures of François Métayer \\ \LaTeX ed by Cédric HT}
+\date{25 -- 28 September 2017}
+
+\newcommand{\Weq}{\frakWW}
+\newcommand{\Fib}{\mathfrak{Fib}}
+\newcommand{\Cof}{\mathfrak{Cof}}
+
+\begin{document}
+
+\maketitle
+
+\begin{definition*}
+This document is unofficial notes taken from the lectures ``Homotopy Theory of Strict $\omega$-Categories'' given by François Métayer during the conference ``Categories in Homotopy Theory and Rewriting'', held at CIRM in September 2017. It can contain many typos and mistakes, and some notations have been changed from the original lecture.
+\end{definition*}
+
+\section{Model categories}
+
+Throughout this section, we assume the ambient category $\catCC$ to be complete and cocomplete. We make use of the grammatical composition convention, meaning that the composite of $A \xrightarrow{f} B \xrightarrow{g} C$ is written $fg$.
+
+\paragraph*{Lifting properties. } Consider the following diagram:
+\[ \begin{tikzpicture}[inline/.style = {fill = white, inner sep = 2.5pt}]
+        \matrix (m) [matrix of math nodes, row sep = 2em, column sep = 3em, text height = 1.5ex, text depth = 0.25ex] {
+            \bullet & \bullet \\
+            \bullet & \bullet \\
+        };
+        \path[->]
+            (m-1-1) edge                              (m-1-2)
+            (m-1-1) edge          node [left]   {$f$} (m-2-1)
+            (m-1-2) edge          node [right]  {$g$} (m-2-2)
+            (m-2-1) edge                              (m-2-2)
+            (m-2-1) edge [dashed] node [inline] {$k$} (m-1-2);
+    \end{tikzpicture} \]
+We say that $f$ has the left lifting property with respect to $g$ if such a morphism $k$ making the two triangles commute exists. We also say that $g$ has the right lifting property with respect to $f$, and denote it by $f \boxslash g$. If $\frakII$ is a class of morphism, let ${}^\boxslash \frakII = \{ f \in \hom \catCC \mid f \boxslash i, \forall i \in \frakII \}$ and similarily for $\frakII^\boxslash$. The class ${}^\boxslash \frakII$ of $\frakII$-injective morphism is closed under pushouts, sums, retracts, and transfinite composition.
+
+\paragraph*{Small objects. } We say that an object $A$ is small if the representable $\catCC (A, -)$ preserves countable directed colimits. If $\frakII$ is a class of morphism whose domain are all small, we can apply the following:
+
+\begin{theorem}[Small object argument]
+Under the conditions above, any morphism $f \in \frakII$ can be factorized as $f = i p$, with $p \in {}^\boxslash \frakII$ and $i \in {}^\boxslash (\frakII^\boxslash)$.
+\end{theorem}
+
+\paragraph*{Weak factorization systems. } A weak factorization system is a pair $(\frakLL, \frakRR)$ of classes of morphisms, such that: 
+\begin{inparaenum}[1.]
+  \item each morphism $f$ of $\catCC$ factors as $f = rl$ with $r \in \frakRR$ and $l \in \frakLL$;
+  \item $\frakLL = {}^\boxslash \frakRR$;
+  \item $\frakRR = \frakLL^\boxslash$.	
+\end{inparaenum}
+
+\begin{proposition}
+If $\frakII$ has small domains, then $\left( {}^\boxslash (\frakII^\boxslash), \frakII^\boxslash \right)$ is a weak factoriz	ation system.
+\end{proposition}
+
+\paragraph*{Model structure. } A model structure on $\catCC$ is the data of three classes of morphisms: $\Weq$ (weak equivalences), $\Cof$ (cofibrations), and $\Fib$ (fibrations), such that:
+\begin{enumerate}
+	\item $\Weq$ has the ``3 for 2'' property (also known as ``2 out of 3''): among $f$, $g$, $fg$, if two are in $\Weq$ then so is the third;
+	\item $\Weq$, $\Cof$, and $\Fib$ are closed under retracts;
+	\item $\Weq \cap \Cof \subseteq {}^\boxslash \Fib$, and $\Weq \cap \Fib \subseteq \Cof^\boxslash$;
+	\item we have two weak factorization systems: $(\Weq \cap \Cof, \Fib)$, and $(\Cof, \Weq \cap \Fib)$.
+\end{enumerate}
+
+This is the classical definition, that we shall not use. The following one is proved equivalent in \cite{MR1780498}: a model structure on $\catCC$ is the data of two classes of morphisms: $\Weq$ (weak equivalences) and $\frakII$ (generating cofibrations), such that:
+\begin{enumerate}
+	\item $\Weq$ has the ``3 for 2'' property and is stable under retracts;
+	\item $\frakII^\boxslash \subseteq \Weq$;
+	\item $\Weq \cap {}^\boxslash (\frakII^\boxslash)$ is stable under pushouts and transfinite composition;
+	\item the ``solution set condition'' holds: for $i \in \frakII$, let $J_i$ be the class of morphisms $j$ that factor an outer square as follows:
+		\[ \begin{tikzpicture}[inline/.style = {fill = white, inner sep = 2.5pt}]
+	        \matrix (m) [matrix of math nodes, row sep = 2em, column sep = 3em, text height = 1.5ex, text depth = 0.25ex] {
+	            \bullet &         & \bullet \\
+	                    & \bullet &         \\
+	                    & \bullet &         \\
+				\bullet &         & \bullet \\
+	        };
+	        \path[->]
+	            (m-1-1) edge                                       (m-1-3)	            	            
+	            (m-1-1) edge          node [left]   {$i$}          (m-4-1)
+	            (m-1-3) edge          node [right]  {$w \in \Weq$} (m-4-3)
+	            (m-4-1) edge                                       (m-4-3)
+	            (m-1-1) edge [dashed]                              (m-2-2)
+	            (m-2-2) edge [dashed]                              (m-1-3)
+	            (m-2-2) edge [dashed] node [left]   {$j$}          (m-3-2)
+	            (m-4-1) edge [dashed]                              (m-3-2)
+	            (m-3-2) edge [dashed]                              (m-4-3);
+	    \end{tikzpicture} \]
+	    we then ask that $J_i \subseteq \Weq \cap {}^\boxslash (\frakII^\boxslash)$.
+\end{enumerate}
+
+\begin{theorem}[Jeff Smith]
+Under the above conditions, letting $\Cof = {}^\boxslash (\frakII^\boxslash)$ and $\Fib = (\Weq \cap \Cof)^\boxslash$ yields a model structure in the classical definition.
+\end{theorem}
+
+
+\section{$\omega$-categories}
+
+\paragraph*{Globular sets. } Let $\bbGG$ be the category of globes, having objects the natural numbers, and morphisms $\sigma, \tau : n \longrightarrow n+1$, for all $n \in \bbNN$, subject to the following globularity conditions:
+\[ \left\{ \begin{array}{l}
+	\sigma \sigma = \sigma \tau \\ \tau \sigma = \tau \tau .
+\end{array} \right. \]
+The category of globular sets is defined as $\hat{\bbGG} = [ \bbGG^\op, \Set ]$.
+
+\paragraph*{$\omega$-categories. } An $\omega$-category $\catCC$ is a globular set
+\[ \catCC_0 \xleftarrow{s, t} \catCC_1 \xleftarrow{s, t} \cdots \xleftarrow{s, t} \catCC_n \xleftarrow{s, t} \catCC_{n+1} \xleftarrow{s, t} \cdots , \]
+with:
+\begin{enumerate}
+	\item compositions: for $x, y \in \catCC_n$ with $tx = sy$, we have a composition $x \circ_{n-1} y \in \catCC_n$;
+	\item identity cells: for $x \in \catCC_n$ we have $\id (x) \in \catCC_{n+1}$ being left and right neutral for $\circ_n$;
+\end{enumerate}
+such that:
+\begin{enumerate}
+	\item composition is associative;
+	\item the exchange rule holds:
+		\[ (x \circ_i y) \circ_j (z \circ_i w) = (x \circ_j z) \circ_i (y \circ_j w) \]
+		whenever those expressions are defined.
+\end{enumerate}
+Let $\Cat_\omega$ be the category of strict $\omega$-categories and natural transformations that preserve composition and identities, also called $\omega$-functors.
+
+For $\catCC \in \Cat_\omega$ and $x, y \in \catCC_0$, the $\hom$ $[x, y]$ is also an $\omega$-category. For $u \in \catCC_{n+1}$ such that $s^0 u = x$ (iterated source at dimension $0$) and $t^0 = y$, we have a cell $[u] \in [x, y]_n$.
+
+The forgetful functor $\Cat_\omega \longrightarrow \hat{\bbGG}$ has a left adjoint. Let $O[n]$ be the free $\omega$-category over the representable $\bbGG (-, n)$. Let $\partial O [n]$ be the boundary of $O [n]$, i.e. the free $\omega$-category over $\bbGG (-, n)$ with the $n$-cell removed. We have canonical inclusions $i_n : \partial O [n] \longincl O [n]$, and let $\frakII = \{ i_n \mid i \in \bbNN \}$.
+
+\begin{definition}
+This definition is made by mutual coinduction.
+\begin{itemize}
+	\item For $n \geq 1$, a $n$-cell $u : x \longrightarrow y$ is reversible if there is a cell $\barU : y \longrightarrow x$ such that $u \circ_{n-1} \barU \sim_\omega \id (x)$ and $\barU \circ_{n-1} u \sim_\omega \id (y)$;
+	\item For $n \geq 1$, two parallel $n$-cells $f$ and $g$ are $\omega$-equivalent, denoted by $f \sim_\omega g$, if there exists a reversible $(n+1)$-cell $u : f \longrightarrow g$.
+\end{itemize}
+\end{definition}
+
+For instance, identities are reversible cells. An $\omega$-functor $F : \catCC \longrightarrow \catDD$ is a weak equivalence if
+\begin{enumerate}
+	\item $F_0 : \catCC_0 \longrightarrow \catDD_0$ is surjective up to $\sim_\omega$;
+	\item for parallel $x, y \in \catCC_n$, of there is $w : Fx \longrightarrow Fy$, then there exists $v : x \longrightarrow y$ such that $Fv \sim_\omega w$.
+\end{enumerate}
+Let $\Weq$ be the class of such weak equivalences.
+
+\begin{proposition}
+\begin{enumerate}
+	\item We have $\frakII^\boxslash \subseteq \Weq$;
+	\item $\Weq$ has the ``3 for 2''.
+\end{enumerate}
+\end{proposition}
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+\end{document}
